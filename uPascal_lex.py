@@ -133,8 +133,6 @@ t_PRIRAZENI = r":="
 t_STREDNIK = r";"
 t_DVOJTECKA = r":"
 t_TECKA = r"\."
-t_LBRACKET = r"{"
-t_RBRACKET = r"}"
 
 def t_error(t):
     print("|LexErr| Token: '{}' Radek: {} Sloupec: {}".format(t.value[0], t.lineno, t.lexpos - t.lexer.lexdata.rfind('\n', 0, t.lexpos)), file=sys.stderr)
