@@ -34,11 +34,6 @@ keywords = (
 )
 
 tokens = keywords + (
-
-    # Whitespace
-    "TAB",  # "\t"
-    "NOVYRADEK",  # "\n"
-
     "RETEZ",  # "'" until next "'"
 
     "LPAR",  # "("
@@ -63,18 +58,16 @@ tokens = keywords + (
     "NENIROVNO",  # "<>"
     "PRIRAZENI",  # ":="
 
-    "CARKA",  # ","
     "STREDNIK",  # ";"
     "DVOJTECKA",  # ":"
     "TECKA",  # "."
-    "LBRACKET",  # "{"
-    "RBRACKET",  # "}"
 
     "CISLO",  # number
     "PROMENNA",  # variable
 )
 
 t_ignore = " \t"
+
 
 def t_CISLO(t):
     # if starts with $ then it is hex, if starts with % then it is binary, else it is decimal
@@ -86,6 +79,7 @@ def t_CISLO(t):
     else:
         t.value = int(t.value)
     return t
+
 
 def t_TRUE(t):
     r"\btrue\b"
@@ -136,7 +130,6 @@ t_VETSIROVNO = r">="
 t_POROVNANI = r"="
 t_NENIROVNO = r"<>"
 t_PRIRAZENI = r":="
-t_CARKA = r","
 t_STREDNIK = r";"
 t_DVOJTECKA = r":"
 t_TECKA = r"\."
