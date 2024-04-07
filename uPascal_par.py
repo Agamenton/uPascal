@@ -201,7 +201,7 @@ def p_vyraz_unary(p):
 def p_vyraz_boolean(p):
     '''vyraz : TRUE
              | FALSE'''
-    p[0] = GenCislo(1 if p[1] == 'true' else 0)
+    p[0] = GenCislo(0xFFFFFFFF if p[1] == 'true' else 0) # used numbers because bools can be handled as numbers anyway
 
 def p_vyraz_binary(p):
     '''vyraz : vyraz TIMES vyraz
@@ -380,9 +380,6 @@ if __name__ == '__main__':
     test_file = "Test/Prvocisla.uP"
     with open(test_file, 'r') as f:
         data = f.read()
-        tokens = tokenize(data)
-        for t in tokens:
-            print(t)
         result = parser.parse(data, lexer=uP_lexer)
     # print(result)
     # import os
