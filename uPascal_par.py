@@ -1,6 +1,6 @@
 import sys
 
-from uPascal_lex import uP_lexer, tokens
+from uPascal_lex import uP_lexer, tokens, tokenize
 import ply.yacc as yacc
 from uzel import *
 
@@ -198,6 +198,10 @@ def p_vyraz_unary(p):
     else:
         p[0] = p[2]
 
+def p_vyraz_boolean(p):
+    '''vyraz : TRUE
+             | FALSE'''
+    p[0] = GenCislo(1 if p[1] == 'true' else 0)
 
 def p_vyraz_binary(p):
     '''vyraz : vyraz TIMES vyraz
@@ -340,7 +344,6 @@ def p_vyraz_binary(p):
         else:
             p[0] = GenUzel(NENIROVNO, p[1], p[3])
 
-
 def p_vyraz_ord(p):
     '''vyraz : ORD LPAR retez RPAR '''
     p[0] = GenUzel(ORD, p[3])
@@ -374,13 +377,16 @@ def p_error(p):
 parser = yacc.yacc()
 
 if __name__ == '__main__':
-    test_file = "Test/Fibonacci.uP"
+    test_file = "Test/Prvocisla.uP"
     with open(test_file, 'r') as f:
         data = f.read()
+        tokens = tokenize(data)
+        for t in tokens:
+            print(t)
         result = parser.parse(data, lexer=uP_lexer)
     # print(result)
-    import os
-
+    # import os
+    #
     # files_in_dir = os.listdir("Test")
     # p = False
     # for f in files_in_dir:
