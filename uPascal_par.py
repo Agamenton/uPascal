@@ -169,7 +169,7 @@ def p_vyraz_unary(p):
              | PLUS vyraz
              | MINUS vyraz
              | LPAR vyraz RPAR '''
-    if p[1] == "!":
+    if p[1] == "not":
         if Konst(p[2]):
             p[2].z["Cislo"] = not p[2].z["Cislo"]
             p[0] = p[2]
