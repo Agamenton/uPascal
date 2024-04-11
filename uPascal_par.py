@@ -160,12 +160,6 @@ def p_write3(p):
 
 def p_prikaz_read(p):
     '''prikaz : READ LPAR promenna RPAR '''
-    user_input = input()
-    if user_input.isdigit():
-        user_input = int(user_input)
-    else:   # if user entered string return ASCII value of first character
-        user_input = ord(user_input[0])
-    p[3] = user_input
     p[0] = GenUzel(READ, p[3])
 
 
