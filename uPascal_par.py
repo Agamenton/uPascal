@@ -177,13 +177,13 @@ def p_vyraz_unary(p):
              | LPAR vyraz RPAR '''
     if p[1] == BIT_XOR:
         if Konst(p[2]):
-            p[2].z.Cislo = not p[2].z.Cislo
+            p[2].z["Cislo"] = not p[2].z["Cislo"]
             p[0] = p[2]
         else:
             p[0] = GenUzel(NOT, p[2])
     elif p[1] == BIT_NEG:
         if Konst(p[2]):
-            p[2].z.Cislo = ~p[2].z.Cislo
+            p[2].z["Cislo"] = ~p[2].z["Cislo"]
             p[0] = p[2]
         else:
             p[0] = GenUzel(BIT_NEG, p[2])
@@ -191,7 +191,7 @@ def p_vyraz_unary(p):
         p[0] = p[2]
     elif p[1] == MINUS:
         if Konst(p[2]):
-            p[2].z.Cislo = -p[2].z.Cislo
+            p[2].z["Cislo"] = -p[2].z["Cislo"]
             p[0] = p[2]
         else:
             p[0] = GenUzel(MINUS, p[2])
@@ -225,14 +225,14 @@ def p_vyraz_binary(p):
              | vyraz NENIROVNO vyraz '''
     if p[2] == TIMES:
         if Konst2(p[1], p[3]):
-            p[1].z.Cislo *= p[3].z.Cislo
+            p[1].z["Cislo"] *= p[3].z["Cislo"]
             p[0] = p[1]
         else:
             p[0] = GenUzel(TIMES, p[1], p[3])
     elif p[2] == DIVIDE:
         if Konst2(p[1], p[3]):
-            if p[3].z.Cislo != 0:
-                p[1].z.Cislo /= p[3].z.Cislo
+            if p[3].z["Cislo"] != 0:
+                p[1].z["Cislo"] /= p[3].z["Cislo"]
             else:
                 raise ValueError("Deleni nulou")
             p[0] = p[1]
@@ -240,8 +240,8 @@ def p_vyraz_binary(p):
             p[0] = GenUzel(DIVIDE, p[1], p[3])
     elif p[2] == 'mod':
         if Konst2(p[1], p[3]):
-            if p[3].z.Cislo != 0:
-                p[1].z.Cislo %= p[3].z.Cislo
+            if p[3].z["Cislo"] != 0:
+                p[1].z["Cislo"] %= p[3].z["Cislo"]
             else:
                 raise ValueError("Deleni nulou")
             p[0] = p[1]
@@ -249,97 +249,97 @@ def p_vyraz_binary(p):
             p[0] = GenUzel(MOD, p[1], p[3])
     elif p[2] == 'and':
         if Konst2(p[1], p[3]):
-            p[1].z.Cislo = p[1].z.Cislo and p[3].z.Cislo
+            p[1].z["Cislo"] = p[1].z["Cislo"] and p[3].z["Cislo"]
             p[0] = p[1]
         else:
             p[0] = GenUzel(AND, p[1], p[3])
     elif p[2] == BIT_AND:
         if Konst2(p[1], p[3]):
-            p[1].z.Cislo &= p[3].z.Cislo
+            p[1].z["Cislo"] &= p[3].z["Cislo"]
             p[0] = p[1]
         else:
             p[0] = GenUzel(BIT_AND, p[1], p[3])
     elif p[2] == 'shl':
         if Konst2(p[1], p[3]):
-            p[1].z.Cislo <<= p[3].z.Cislo
+            p[1].z["Cislo"] <<= p[3].z["Cislo"]
             p[0] = p[1]
         else:
             p[0] = GenUzel(SHL, p[1], p[3])
     elif p[2] == 'shr':
         if Konst2(p[1], p[3]):
-            p[1].z.Cislo >>= p[3].z.Cislo
+            p[1].z["Cislo"] >>= p[3].z["Cislo"]
             p[0] = p[1]
         else:
             p[0] = GenUzel(SHR, p[1], p[3])
     elif p[2] == PLUS:
         if Konst2(p[1], p[3]):
-            p[1].z.Cislo += p[3].z.Cislo
+            p[1].z["Cislo"] += p[3].z["Cislo"]
             p[0] = p[1]
         else:
             p[0] = GenUzel(PLUS, p[1], p[3])
     elif p[2] == MINUS:
         if Konst2(p[1], p[3]):
-            p[1].z.Cislo -= p[3].z.Cislo
+            p[1].z["Cislo"] -= p[3].z["Cislo"]
             p[0] = p[1]
         else:
             p[0] = GenUzel(MINUS, p[1], p[3])
     elif p[2] == 'or':
         if Konst2(p[1], p[3]):
-            p[1].z.Cislo = p[1].z.Cislo or p[3].z.Cislo
+            p[1].z["Cislo"] = p[1].z["Cislo"] or p[3].z["Cislo"]
             p[0] = p[1]
         else:
             p[0] = GenUzel(OR, p[1], p[3])
     elif p[2] == 'xor':
         if Konst2(p[1], p[3]):
-            p[1].z.Cislo = (p[1].z.Cislo and not p[3].z.Cislo) or (not p[1].z.Cislo and p[3].z.Cislo)
+            p[1].z["Cislo"] = (p[1].z["Cislo"] and not p[3].z["Cislo"]) or (not p[1].z["Cislo"] and p[3].z["Cislo"])
             p[0] = p[1]
         else:
             p[0] = GenUzel(XOR, p[1], p[3])
     elif p[2] == BIT_OR:
         if Konst2(p[1], p[3]):
-            p[1].z.Cislo |= p[3].z.Cislo
+            p[1].z["Cislo"] |= p[3].z["Cislo"]
             p[0] = p[1]
         else:
             p[0] = GenUzel(BIT_OR, p[1], p[3])
     elif p[2] == BIT_XOR:
         if Konst2(p[1], p[3]):
-            p[1].z.Cislo ^= p[3].z.Cislo
+            p[1].z["Cislo"] ^= p[3].z["Cislo"]
             p[0] = p[1]
         else:
             p[0] = GenUzel(BIT_XOR, p[1], p[3])
     elif p[2] == MENSI:
         if Konst2(p[1], p[3]):
-            p[1].z.Cislo = p[1].z.Cislo < p[3].z.Cislo
+            p[1].z["Cislo"] = p[1].z["Cislo"] < p[3].z["Cislo"]
             p[0] = p[1]
         else:
             p[0] = GenUzel(MENSI, p[1], p[3])
     elif p[2] == VETSI:
         if Konst2(p[1], p[3]):
-            p[1].z.Cislo = p[1].z.Cislo > p[3].z.Cislo
+            p[1].z["Cislo"] = p[1].z["Cislo"] > p[3].z["Cislo"]
             p[0] = p[1]
         else:
             p[0] = GenUzel(VETSI, p[1], p[3])
     elif p[2] == '<=':
         if Konst2(p[1], p[3]):
-            p[1].z.Cislo = p[1].z.Cislo <= p[3].z.Cislo
+            p[1].z["Cislo"] = p[1].z["Cislo"] <= p[3].z["Cislo"]
             p[0] = p[1]
         else:
             p[0] = GenUzel(MENSIROVNO, p[1], p[3])
     elif p[2] == '>=':
         if Konst2(p[1], p[3]):
-            p[1].z.Cislo = p[1].z.Cislo >= p[3].z.Cislo
+            p[1].z["Cislo"] = p[1].z["Cislo"] >= p[3].z["Cislo"]
             p[0] = p[1]
         else:
             p[0] = GenUzel(VETSIROVNO, p[1], p[3])
     elif p[2] == POROVNANI:
         if Konst2(p[1], p[3]):
-            p[1].z.Cislo = p[1].z.Cislo == p[3].z.Cislo
+            p[1].z["Cislo"] = p[1].z["Cislo"] == p[3].z["Cislo"]
             p[0] = p[1]
         else:
             p[0] = GenUzel(POROVNANI, p[1], p[3])
     elif p[2] == '!=':
         if Konst2(p[1], p[3]):
-            p[1].z.Cislo = p[1].z.Cislo != p[3].z.Cislo
+            p[1].z["Cislo"] = p[1].z["Cislo"] != p[3].z["Cislo"]
             p[0] = p[1]
         else:
             p[0] = GenUzel(NENIROVNO, p[1], p[3])
