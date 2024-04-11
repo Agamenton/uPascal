@@ -80,6 +80,27 @@ class Uzel:
     def __repr__(self):
         return self.__str__()
 
+    def prvni(self):
+        return self.z["prvni"] if "prvni" in self.z.keys() else None
+
+    def druhy(self):
+        return self.z["druhy"] if "druhy" in self.z.keys() else None
+
+    def treti(self):
+        return self.z["treti"] if "treti" in self.z.keys() else None
+
+    def ctvrty(self):
+        return self.z["ctvrty"] if "ctvrty" in self.z.keys() else None
+
+    def cislo(self):
+        return self.z["Cislo"] if "Cislo" in self.z.keys() else None
+
+    def retez(self):
+        return self.z["Retez"] if "Retez" in self.z.keys() else None
+
+    def promenna(self):
+        return self.z["Adresa"] if "Adresa" in self.z.keys() else None
+
 
 def GenUzel(typ, z1=None, z2=None, z3=None, z4=None):
     return Uzel(typ, {'prvni': z1, 'druhy': z2, 'treti': z3, 'ctvrty': z4})
@@ -98,20 +119,9 @@ def GenRetez(retez):
 
 
 def Konst(u: Uzel) -> bool:
-    return u and u.typ == 'CISLO'
+    return u and u.typ == CISLO
 
 
 def Konst2(u1: Uzel, u2: Uzel) -> bool:
     return Konst(u1) and Konst(u2)
 
-
-Koren = None
-
-
-def get_Koren():
-    return Koren
-
-
-def set_Koren(koren):
-    global Koren
-    Koren = koren
