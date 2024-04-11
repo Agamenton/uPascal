@@ -26,12 +26,19 @@ def interpret(node: Uzel):
         variables[name] = val
         return val
 
+    # ---------------------------------
+    # ------- Builtin functions -------
     elif typ == WRITE:
         if not node.prvni():
             print(end="")
         elif node.druhy():
-            length = interpret(node.druhy())
-            print(f"{interpret(node.prvni())}"[:length], end="")
+            spaces = interpret(node.druhy())
+            val = interpret(node.prvni())
+            length = len(str(val))
+            if length < spaces:
+                val = f"{''.join([' ' for _ in range(spaces - length)])}{val}"
+            print(f"{val}", end="")
+
         else:
             print(f"{interpret(node.prvni())}", end="")
         return 0
@@ -40,29 +47,94 @@ def interpret(node: Uzel):
         if not node.prvni():
             print()
         elif node.druhy():
-            length = interpret(node.druhy())
-            print(f"{interpret(node.prvni())}"[:length])
+            spaces = interpret(node.druhy())
+            val = interpret(node.prvni())
+            length = len(str(val))
+            if length < spaces:
+                val = f"{''.join([' ' for _ in range(spaces - length)])}{val}"
+            print(f"{val}")
         else:
             print(f"{interpret(node.prvni())}")
         return 0
 
+    elif typ == READ:
+        name = node.prvni().promenna()
+
+        user_input = input()
+        if user_input.isdigit():
+            user_input = int(user_input)
+        else:  # if user entered string return ASCII value of first character
+            user_input = ord(user_input[0])
+
+        variables[name] = user_input
+        return 0
+
+    elif typ == BIN:
+        return bin(interpret(node.prvni()))[2:]
+
+    elif typ == HEX:
+        return hex(interpret(node.prvni()))[2:] # ? Maybe remove the 0x prefix
+
+    elif typ == CHR:
+        return chr(interpret(node.prvni()))
+
+    elif typ == ORD:
+        return ord(interpret(node.prvni()))
+
+    # ---------------------------------
+    # ------------ Types --------------
     elif typ == PROMENNA:
         return variables[node.promenna()]
 
     elif typ == CISLO:
         return node.cislo()
 
+    elif typ == RETEZ:
+        return node.retez()
+
+    # ---------------------------------
+    # ---------- Operators ------------
     elif typ == PLUS:
         return interpret(node.prvni()) + interpret(node.druhy())
 
-    elif typ == REPEAT:
-        while True:
-            interpret(node.prvni())
-            if not interpret(node.druhy()):
-                break
-
     elif typ == MINUS:
         return interpret(node.prvni()) - interpret(node.druhy())
+
+    elif typ == TIMES:
+        return interpret(node.prvni()) * interpret(node.druhy())
+
+    elif typ == DIVIDE:
+        return interpret(node.prvni()) // interpret(node.druhy())
+
+    elif typ == MOD:
+        return interpret(node.prvni()) % interpret(node.druhy())
+
+    elif typ == BIT_AND:
+        return interpret(node.prvni()) & interpret(node.druhy())
+
+    elif typ == BIT_OR:
+        return interpret(node.prvni()) | interpret(node.druhy())
+
+    elif typ == BIT_XOR:
+        return interpret(node.prvni()) ^ interpret(node.druhy())
+
+    elif typ == BIT_NEG:
+        return ~interpret(node.prvni())
+
+    elif typ == BIT_NOT:
+        return ~ interpret(node.prvni())
+
+    elif typ == SHR:
+        return interpret(node.prvni()) >> interpret(node.druhy())
+
+    elif typ == SHL:
+        return interpret(node.prvni()) << interpret(node.druhy())
+
+    elif typ == NENIROVNO:
+        return interpret(node.prvni()) != interpret(node.druhy())
+
+    elif typ == POROVNANI:
+        return interpret(node.prvni()) == interpret(node.druhy())
 
     elif typ == MENSI:
         return interpret(node.prvni()) < interpret(node.druhy())
@@ -70,20 +142,75 @@ def interpret(node: Uzel):
     elif typ == VETSI:
         return interpret(node.prvni()) > interpret(node.druhy())
 
+    elif typ == VETSIROVNO:
+        return interpret(node.prvni()) >= interpret(node.druhy())
+
+    elif typ == MENSIROVNO:
+        return interpret(node.prvni()) <= interpret(node.druhy())
+
+    elif typ == AND:
+        return interpret(node.prvni()) and interpret(node.druhy())
+
+    elif typ == OR:
+        return interpret(node.prvni()) or interpret(node.druhy())
+
+    elif typ == NOT:
+        return not interpret(node.prvni())
+
+    elif typ == XOR:
+        # logical xor
+        val1 = interpret(node.prvni())
+        val2 = interpret(node.druhy())
+        return val1 != val2
+
+    # ---------------------------------
+    # ---------- Statements ------------
+    elif typ == BEGIN:
+        while interpret(node.prvni()):
+            interpret(node.druhy())
+
+    elif typ == IF:
+        if interpret(node.prvni()):
+            interpret(node.druhy())
+        else:
+            if node.treti():
+                interpret(node.treti())
+
+    elif typ == WHILE:
+        while interpret(node.prvni()):
+            interpret(node.druhy())
+
+    elif typ == FOR:
+        if node.prvni() == FORDOWN:
+            for i in range(interpret(node.druhy()), interpret(node.treti()), -1):
+                variables[node.prvni().promenna()] = i
+                interpret(node.ctvrty())
+        else:
+            for i in range(interpret(node.druhy()), interpret(node.treti())):
+                variables[node.prvni().promenna()] = i
+                interpret(node.ctvrty())
+
+    elif typ == REPEAT:
+        while True:
+            interpret(node.prvni())
+            if interpret(node.druhy()):
+                break
+
     else:
         raise TypeError(f"Unknown typ: {typ}")
 
 
 if __name__ == "__main__":
-    # test_file = sys.argv[1]
-    test_file = "Test/test1.up"
+    test_file = sys.argv[1]
+    #test_file = "Test/Dekadicke na binarni.uP"
 
     with open(test_file, "r") as f:
         code = f.read()
 
     AST = parser.parse(code, lexer=uP_lexer)
-    print(AST)
+    #print(AST)
     try:
         interpret(AST)
     except Exception as e:
         print(e, file=sys.stderr)
+        raise e
