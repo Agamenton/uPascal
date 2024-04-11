@@ -137,6 +137,16 @@ t_TECKA = r"\."
 def t_error(t):
     print("|LexErr| Token: '{}' Radek: {} Sloupec: {}".format(t.value[0], t.lineno, t.lexpos - t.lexer.lexdata.rfind('\n', 0, t.lexpos)), file=sys.stderr)
 
+# block comment = { ... }
+def t_COMMENT(t):
+    r'\{[^}]*\}'
+    t.lexer.lineno += t.value.count('\n')
+    pass
+
+# line comment = // ...
+def t_COMMENT_LINE(t):
+    r'//.*'
+    pass
 
 uP_lexer = lex.lex()
 
