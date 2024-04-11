@@ -158,10 +158,7 @@ def interpret(node: Uzel):
         return not interpret(node.prvni())
 
     elif typ == XOR:
-        # logical xor
-        val1 = interpret(node.prvni())
-        val2 = interpret(node.druhy())
-        return val1 != val2
+        return interpret(node.prvni()) != interpret(node.druhy())
 
     # ---------------------------------
     # ---------- Statements ------------
@@ -181,14 +178,16 @@ def interpret(node: Uzel):
             interpret(node.druhy())
 
     elif typ == FOR:
-        if node.prvni() == FORDOWN:
-            for i in range(interpret(node.druhy()), interpret(node.treti()), -1):
-                variables[node.prvni().promenna()] = i
-                interpret(node.ctvrty())
-        else:
-            for i in range(interpret(node.druhy()), interpret(node.treti())):
-                variables[node.prvni().promenna()] = i
-                interpret(node.ctvrty())
+        for i in range(interpret(node.druhy()), interpret(node.treti())+1):
+            variables[node.prvni().promenna()] = i
+            interpret(node.ctvrty())
+
+    elif typ == FORDOWN:
+        print(interpret(node.druhy()))
+        print(interpret(node.treti()))
+        for i in range(interpret(node.druhy()), interpret(node.treti())-1, -1):
+            variables[node.prvni().promenna()] = i
+            interpret(node.ctvrty())
 
     elif typ == REPEAT:
         while True:
@@ -202,13 +201,12 @@ def interpret(node: Uzel):
 
 if __name__ == "__main__":
     test_file = sys.argv[1]
-    #test_file = "Test/Dekadicke na binarni.uP"
 
     with open(test_file, "r") as f:
         code = f.read()
 
     AST = parser.parse(code, lexer=uP_lexer)
-    #print(AST)
+
     try:
         interpret(AST)
     except Exception as e:
