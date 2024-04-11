@@ -175,21 +175,21 @@ def p_vyraz_unary(p):
              | PLUS vyraz
              | MINUS vyraz
              | LPAR vyraz RPAR '''
-    if p[1] == BIT_XOR:
+    if p[1] == "!":
         if Konst(p[2]):
             p[2].z["Cislo"] = not p[2].z["Cislo"]
             p[0] = p[2]
         else:
             p[0] = GenUzel(NOT, p[2])
-    elif p[1] == BIT_NEG:
+    elif p[1] == "~":
         if Konst(p[2]):
             p[2].z["Cislo"] = ~p[2].z["Cislo"]
             p[0] = p[2]
         else:
             p[0] = GenUzel(BIT_NEG, p[2])
-    elif p[1] == PLUS:
+    elif p[1] == "+":
         p[0] = p[2]
-    elif p[1] == MINUS:
+    elif p[1] == "-":
         if Konst(p[2]):
             p[2].z["Cislo"] = -p[2].z["Cislo"]
             p[0] = p[2]
@@ -223,13 +223,13 @@ def p_vyraz_binary(p):
              | vyraz VETSIROVNO vyraz
              | vyraz POROVNANI vyraz
              | vyraz NENIROVNO vyraz '''
-    if p[2] == TIMES:
+    if p[2] == "*":
         if Konst2(p[1], p[3]):
             p[1].z["Cislo"] *= p[3].z["Cislo"]
             p[0] = p[1]
         else:
             p[0] = GenUzel(TIMES, p[1], p[3])
-    elif p[2] == DIVIDE:
+    elif p[2] == "/":
         if Konst2(p[1], p[3]):
             if p[3].z["Cislo"] != 0:
                 p[1].z["Cislo"] /= p[3].z["Cislo"]
@@ -253,7 +253,7 @@ def p_vyraz_binary(p):
             p[0] = p[1]
         else:
             p[0] = GenUzel(AND, p[1], p[3])
-    elif p[2] == BIT_AND:
+    elif p[2] == "&":
         if Konst2(p[1], p[3]):
             p[1].z["Cislo"] &= p[3].z["Cislo"]
             p[0] = p[1]
@@ -271,13 +271,13 @@ def p_vyraz_binary(p):
             p[0] = p[1]
         else:
             p[0] = GenUzel(SHR, p[1], p[3])
-    elif p[2] == PLUS:
+    elif p[2] == "+":
         if Konst2(p[1], p[3]):
             p[1].z["Cislo"] += p[3].z["Cislo"]
             p[0] = p[1]
         else:
             p[0] = GenUzel(PLUS, p[1], p[3])
-    elif p[2] == MINUS:
+    elif p[2] == "-":
         if Konst2(p[1], p[3]):
             p[1].z["Cislo"] -= p[3].z["Cislo"]
             p[0] = p[1]
@@ -295,25 +295,25 @@ def p_vyraz_binary(p):
             p[0] = p[1]
         else:
             p[0] = GenUzel(XOR, p[1], p[3])
-    elif p[2] == BIT_OR:
+    elif p[2] == "|":
         if Konst2(p[1], p[3]):
             p[1].z["Cislo"] |= p[3].z["Cislo"]
             p[0] = p[1]
         else:
             p[0] = GenUzel(BIT_OR, p[1], p[3])
-    elif p[2] == BIT_XOR:
+    elif p[2] == "!":
         if Konst2(p[1], p[3]):
             p[1].z["Cislo"] ^= p[3].z["Cislo"]
             p[0] = p[1]
         else:
             p[0] = GenUzel(BIT_XOR, p[1], p[3])
-    elif p[2] == MENSI:
+    elif p[2] == "<":
         if Konst2(p[1], p[3]):
             p[1].z["Cislo"] = p[1].z["Cislo"] < p[3].z["Cislo"]
             p[0] = p[1]
         else:
             p[0] = GenUzel(MENSI, p[1], p[3])
-    elif p[2] == VETSI:
+    elif p[2] == ">":
         if Konst2(p[1], p[3]):
             p[1].z["Cislo"] = p[1].z["Cislo"] > p[3].z["Cislo"]
             p[0] = p[1]
@@ -331,7 +331,7 @@ def p_vyraz_binary(p):
             p[0] = p[1]
         else:
             p[0] = GenUzel(VETSIROVNO, p[1], p[3])
-    elif p[2] == POROVNANI:
+    elif p[2] == "=":
         if Konst2(p[1], p[3]):
             p[1].z["Cislo"] = p[1].z["Cislo"] == p[3].z["Cislo"]
             p[0] = p[1]
@@ -377,11 +377,11 @@ def p_error(p):
 parser = yacc.yacc()
 
 if __name__ == '__main__':
-    test_file = "Test/Prvocisla.uP"
+    test_file = "Test/test1.up"
     with open(test_file, 'r') as f:
         data = f.read()
         result = parser.parse(data, lexer=uP_lexer)
-    # print(result)
+    print(result)
     # import os
     #
     # files_in_dir = os.listdir("Test")
