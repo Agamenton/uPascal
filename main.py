@@ -5,6 +5,9 @@ from uPascal_par import *
 from uzel import *
 
 
+variables = {}
+
+
 def write(node, ln=False):
     end = "\n" if ln else ""
     if not node.prvni():
@@ -20,9 +23,6 @@ def write(node, ln=False):
     else:
         print(f"{interpret(node.prvni())}", end=end)
     return 0
-
-
-variables = {}
 
 
 def interpret(node: Uzel):
@@ -66,10 +66,10 @@ def interpret(node: Uzel):
         return 0
 
     elif typ == BIN:
-        return bin(interpret(node.prvni()))[2:]
+        return bin(interpret(node.prvni()))[2:]     # skip first 2 chars (0b)
 
     elif typ == HEX:
-        return hex(interpret(node.prvni()))[2:] # ? Maybe remove the 0x prefix
+        return hex(interpret(node.prvni()))[2:]     # skip first 2 chars (0x)
 
     elif typ == CHR:
         return chr(interpret(node.prvni()))
@@ -118,9 +118,6 @@ def interpret(node: Uzel):
 
     elif typ == BIT_NEG:
         return ~interpret(node.prvni())
-
-    elif typ == BIT_NOT:
-        return ~ interpret(node.prvni())
 
     elif typ == SHR:
         return interpret(node.prvni()) >> interpret(node.druhy())
@@ -181,8 +178,6 @@ def interpret(node: Uzel):
             interpret(node.ctvrty())
 
     elif typ == FORDOWN:
-        print(interpret(node.druhy()))
-        print(interpret(node.treti()))
         for i in range(interpret(node.druhy()), interpret(node.treti())-1, -1):
             variables[node.prvni().promenna()] = i
             interpret(node.ctvrty())

@@ -148,34 +148,5 @@ def t_COMMENT_LINE(t):
     r'//.*'
     pass
 
+
 uP_lexer = lex.lex()
-
-
-def tokenize(s):
-    uP_lexer.input(s)
-    result = []
-    while True:
-        tok = uP_lexer.token()
-        if not tok:
-            break
-        result.append(tok)
-    return result
-
-def test():
-    import os
-    files_in_dir = os.listdir("Test")
-    p = False
-    for f in files_in_dir:
-        with open("Test/" + f, "r") as file:
-            data = file.read()
-            toks = tokenize(data)
-            print(f"file {f} is OK")
-        if not p:
-            p = True
-            print(file.name)
-            for t in toks:
-                print(t)
-
-
-if __name__ == '__main__':
-    test()
