@@ -5,6 +5,23 @@ from uPascal_par import *
 from uzel import *
 
 
+def write(node, ln=False):
+    end = "\n" if ln else ""
+    if not node.prvni():
+        print(end=end)
+    elif node.druhy():
+        spaces = interpret(node.druhy())
+        val = interpret(node.prvni())
+        length = len(str(val))
+        if length < spaces:
+            val = f"{''.join([' ' for _ in range(spaces - length)])}{val}"
+        print(f"{val}", end=end)
+
+    else:
+        print(f"{interpret(node.prvni())}", end=end)
+    return 0
+
+
 variables = {}
 
 
@@ -29,32 +46,11 @@ def interpret(node: Uzel):
     # ---------------------------------
     # ------- Builtin functions -------
     elif typ == WRITE:
-        if not node.prvni():
-            print(end="")
-        elif node.druhy():
-            spaces = interpret(node.druhy())
-            val = interpret(node.prvni())
-            length = len(str(val))
-            if length < spaces:
-                val = f"{''.join([' ' for _ in range(spaces - length)])}{val}"
-            print(f"{val}", end="")
-
-        else:
-            print(f"{interpret(node.prvni())}", end="")
+        write(node)
         return 0
 
     elif typ == WRITELN:
-        if not node.prvni():
-            print()
-        elif node.druhy():
-            spaces = interpret(node.druhy())
-            val = interpret(node.prvni())
-            length = len(str(val))
-            if length < spaces:
-                val = f"{''.join([' ' for _ in range(spaces - length)])}{val}"
-            print(f"{val}")
-        else:
-            print(f"{interpret(node.prvni())}")
+        write(node, ln=True)
         return 0
 
     elif typ == READ:
