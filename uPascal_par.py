@@ -1,6 +1,6 @@
 import sys
 
-from uPascal_lex import uP_lexer, tokens, tokenize
+from uPascal_lex import uP_lexer, tokens
 import ply.yacc as yacc
 from uzel import *
 
@@ -253,13 +253,13 @@ def p_vyraz_binary(p):
             p[0] = p[1]
         else:
             p[0] = GenUzel(BIT_AND, p[1], p[3])
-    elif p[2] == 'shl':
+    elif p[2] == 'shl' or p[2] == '<<':
         if Konst2(p[1], p[3]):
             p[1].z["Cislo"] <<= p[3].z["Cislo"]
             p[0] = p[1]
         else:
             p[0] = GenUzel(SHL, p[1], p[3])
-    elif p[2] == 'shr':
+    elif p[2] == 'shr' or p[2] == '>>':
         if Konst2(p[1], p[3]):
             p[1].z["Cislo"] >>= p[3].z["Cislo"]
             p[0] = p[1]
@@ -369,20 +369,3 @@ def p_error(p):
 
 
 parser = yacc.yacc()
-
-if __name__ == '__main__':
-    test_file = "Test/test1.up"
-    with open(test_file, 'r') as f:
-        data = f.read()
-        result = parser.parse(data, lexer=uP_lexer)
-    print(result)
-    # import os
-    #
-    # files_in_dir = os.listdir("Test")
-    # p = False
-    # for f in files_in_dir:
-    #     with open("Test/" + f, "r") as file:
-    #         data = file.read()
-    #         uP_lexer.lineno = 1
-    #         result = parser.parse(data, lexer=uP_lexer)
-    #         print(f"file {f} is OK")
