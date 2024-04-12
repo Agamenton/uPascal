@@ -98,6 +98,8 @@ def interpret(node: Uzel):
         return interpret(node.prvni()) + interpret(node.druhy())
 
     elif typ == MINUS:
+        if not node.druhy():
+            return -interpret(node.prvni())
         return interpret(node.prvni()) - interpret(node.druhy())
 
     elif typ == TIMES:
